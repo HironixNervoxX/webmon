@@ -38,3 +38,13 @@ Voir [docs/INSTALLATION.md](docs/INSTALLATION.md) pour l''installation complète
 | `make backup` | Sauvegarde la base Postgres |
 | `make restore` | Restaure la dernière sauvegarde |
 | `make chaos` | Tue un conteneur au hasard (test résilience) |
+
+
+## Commandes disponibles pour webmon.ps1
+
+| Commande | Action |
+|---|---|
+| `.\scripts\webmon.ps1 start` | Démarre le script |
+| `.\scripts\webmon.ps1 chaos` | Arrête un conteneur hasard |
+| `.\scripts\webmon.ps1 health` | état|
+
