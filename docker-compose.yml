@@ -154,9 +154,9 @@
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
       - /:/rootfs:ro
-      ports:
+    ports:
       - "9100:9100"
-      networks:
+    networks:
       - webmon
     restart: unless-stopped
 
@@ -173,7 +173,6 @@
         condition: service_healthy
     networks:
       - webmon
-    restart: unless-stopped
 
 networks:
   webmon:
