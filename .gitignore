@@ -1,0 +1,45 @@
+﻿# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+.env
+.env.local
+
+# Build outputs
+dist/
+build/
+
+# Docker
+**/docker-data/
+**/.docker-volumes/
+
+# Grafana / Prometheus / Loki data (runtime)
+grafana/data/
+prometheus/data/
+loki/data/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Logs
+*.log
+logs/
+
+# Backups (on garde juste le .gitkeep)
+backups/*.sql
+backups/*.tar.gz
+!backups/.gitkeep
+
+# Secrets — JAMAIS commit
+secrets/
+*.pem
+*.key
+*.crt
+.env.production
