@@ -1,0 +1,183 @@
+﻿services:
+  # ============ APPLICATIVE ============
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: webmon-postgres
+    environment:
+      POSTGRES_USER: webmon
+      POSTGRES_PASSWORD: webmon_pwd
+      POSTGRES_DB: webmon
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U webmon"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks:
+      - webmon
+    labels:
+      logging: "promtail"
+
+  backend:
+    build: ./backend
+    container_name: webmon-backend
+    environment:
+      DB_HOST: postgres
+      DB_USER: webmon
+      DB_PASSWORD: webmon_pwd
+      DB_NAME: webmon
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - webmon
+    restart: unless-stopped
+    labels:
+      logging: "promtail"
+
+  frontend:
+    build: ./frontend
+    container_name: webmon-frontend
+    networks:
+      - webmon
+    restart: unless-stopped
+    labels:
+      logging: "promtail"
+
+  nginx:
+    build: ./nginx
+    container_name: webmon-nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - webmon
+    restart: unless-stopped
+    labels:
+      logging: "promtail"
+
+  # ============ MONITORING ============
+
+  prometheus:
+    image: prom/prometheus:v3.4.1
+    container_name: webmon-prometheus
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=7d'
+      - '--web.enable-lifecycle'
+    ports:
+      - "9090:9090"
+    networks:
+      - webmon
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:11.3.0
+    container_name: webmon-grafana
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - grafana-data:/var/lib/grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+      - loki
+    networks:
+      - webmon
+    restart: unless-stopped
+
+  loki:
+    image: grafana/loki:3.4.1
+    container_name: webmon-loki
+    command: -config.file=/etc/loki/local-config.yml
+    volumes:
+      - ./loki/loki-config.yml:/etc/loki/local-config.yml:ro
+      - loki-data:/loki
+    ports:
+      - "3100:3100"
+    networks:
+      - webmon
+    restart: unless-stopped
+
+  promtail:
+    image: grafana/promtail:3.4.1
+    container_name: webmon-promtail
+    command: -config.file=/etc/promtail/config.yml
+    volumes:
+      - ./promtail/promtail-config.yml:/etc/promtail/config.yml:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    depends_on:
+      - loki
+    networks:
+      - webmon
+    restart: unless-stopped
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.50.0
+    container_name: webmon-cadvisor
+    privileged: true
+    devices:
+      - /dev/kmsg
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    ports:
+      - "8080:8080"
+    networks:
+      - webmon
+    restart: unless-stopped
+
+  node-exporter:
+    image: prom/node-exporter:v1.8.2
+    container_name: webmon-node-exporter
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.rootfs=/rootfs'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+ volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    ports:
+      - "9100:9100"
+    networks:
+      - webmon
+    restart: unless-stopped
+
+  postgres-exporter:
+    image: quay.io/prometheuscommunity/postgres-exporter:v0.16.0
+    container_name: webmon-postgres-exporter
+    environment:
+      DATA_SOURCE_NAME: "postgresql://webmon:webmon_pwd@postgres:5432/webmon?sslmode=disable"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - webmon
+    restart: unless-stopped
+
+networks:
+  webmon:
+    driver: bridge
+
+volumes:
+  postgres-data:
+  prometheus-data:
+  grafana-data:
+  loki-data:
