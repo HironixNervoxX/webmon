@@ -1,4 +1,4 @@
-﻿# Force les scripts bash et fichiers de config Linux à garder LF
+# Force les scripts bash et fichiers de config Linux a garder LF
 *.sh           text eol=lf
 *.yml          text eol=lf
 *.yaml         text eol=lf
