@@ -1,4 +1,4 @@
-﻿# Node.js
+# Node.js
 node_modules/
 npm-debug.log*
 yarn-debug.log*
@@ -37,7 +37,7 @@ backups/*.sql
 backups/*.tar.gz
 !backups/.gitkeep
 
-# Secrets — JAMAIS commit
+# Secrets - JAMAIS commit
 secrets/
 *.pem
 *.key
