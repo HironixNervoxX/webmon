@@ -150,21 +150,24 @@
       - '--path.rootfs=/rootfs'
       - '--path.sysfs=/host/sys'
       - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
- volumes:
+    volumes:
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
       - /:/rootfs:ro
-    ports:
+      ports:
       - "9100:9100"
-    networks:
+      networks:
       - webmon
     restart: unless-stopped
 
   postgres-exporter:
     image: quay.io/prometheuscommunity/postgres-exporter:v0.16.0
     container_name: webmon-postgres-exporter
+    restart: unless-stopped
     environment:
       DATA_SOURCE_NAME: "postgresql://webmon:webmon_pwd@postgres:5432/webmon?sslmode=disable"
+    ports:
+      - "9187:9187"
     depends_on:
       postgres:
         condition: service_healthy
