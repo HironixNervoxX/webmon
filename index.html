@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebMon — Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="background-decor"></div>
+  
+  <main class="app-container">
+    <header class="app-header">
+      <div class="logo-area">
+        <span class="pulse-indicator"></span>
+        <h1>WebMon</h1>
+      </div>
+      <p class="subtitle">Gestionnaire de tâches de l'infrastructure</p>
+    </header>
+    
+    <form id="form" class="task-form">
+      <div class="input-capsule">
+        <input type="text" id="title" placeholder="Ajouter une nouvelle tâche..." required autocomplete="off">
+        <button type="submit" class="btn-add" aria-label="Ajouter">+</button>
+      </div>
+    </form>
+    
+    <div id="empty-state" class="empty-state hidden">
+      <p>Aucune tâche en cours. L'infrastructure est stable ! ✨</p>
+    </div>
+    
+    <ul id="list" class="task-list"></ul>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
