@@ -38,7 +38,7 @@ docker ps --filter "name=${VICTIM}" --format "  {{.Names}} : {{.Status}}"
 # Kill
 echo ""
 echo -e "${RED}🔥 Killing ${VICTIM}...${NC}"
-docker kill "$VICTIM" > /dev/null
+docker exec "$VICTIM" kill 1 > /dev/null 2>&1
 
 # Attente du redémarrage
 echo -e "${YELLOW}⏱  Attente du redémarrage automatique...${NC}"
@@ -55,7 +55,7 @@ for i in {1..30}; do
     echo -e "${CYAN}📸 État après :${NC}"
     docker ps --filter "name=${VICTIM}" --format "  {{.Names}} : {{.Status}}"
     echo ""
-    echo -e "${CYAN}🔍 Vérifie Grafana pour voir la coupure : http://localhost:3000${NC}"
+    echo -e "${CYAN}🔍 Vérifie Grafana pour voir la coupure : http://81.249.188.129:3000${NC}"
     exit 0
   fi
 done

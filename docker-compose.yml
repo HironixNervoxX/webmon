@@ -21,7 +21,9 @@
       logging: "promtail"
 
   backend:
-    build: ./backend
+    build:
+      context: ./backend
+      network: host
     container_name: webmon-backend
     environment:
       DB_HOST: postgres
