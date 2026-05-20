@@ -97,7 +97,7 @@ h1 {
   opacity: 0.8;
 }
 
-/* La capsule d'ajout */
+/* Design de la Capsule Sombre */
 .input-capsule {
   display: flex;
   align-items: center;
@@ -130,6 +130,7 @@ h1 {
   opacity: 0.8;
 }
 
+/* Bouton + Circulaire */
 .btn-add {
   background: rgba(255, 255, 255, 0.03);
   color: #93c5fd;
@@ -155,17 +156,21 @@ h1 {
   transform: scale(1.05);
 }
 
-/* STYLE DU MESSAGE CORRIGÉ : Placé juste sous la capsule */
+.btn-add:active {
+  transform: scale(0.95);
+}
+
+/* Messages sous la capsule */
 .empty-state {
   text-align: left;
   padding-left: 1.25rem;
-  margin-top: 1.25rem; /* Espace équilibré sous la capsule */
+  margin-top: 1.25rem;
   color: var(--text-muted);
   font-size: 0.95rem;
   animation: fadeIn 0.3s ease forwards;
 }
 
-/* Liste des tâches (prend le relais si des tâches existent) */
+/* Conteneur de Liste */
 .task-list {
   list-style: none;
   margin-top: 1.25rem;
@@ -174,6 +179,7 @@ h1 {
   gap: 0.75rem;
 }
 
+/* Éléments de la liste */
 li {
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid var(--card-border);
@@ -181,6 +187,7 @@ li {
   padding: 1rem 1.25rem;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 1rem;
   transition: all 0.2s ease;
   animation: fadeIn 0.3s ease forwards;
@@ -191,11 +198,38 @@ li:hover {
   border-color: rgba(255, 255, 255, 0.12);
 }
 
+.task-content {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+  cursor: pointer;
+}
+
+/* Bouton Supprimer */
+.btn-delete {
+  background: transparent;
+  border: none;
+  color: #4b5563;
+  font-size: 1.5rem;
+  font-weight: 300;
+  cursor: pointer;
+  padding: 0 0.5rem;
+  line-height: 1;
+  transition: all 0.2s ease;
+}
+
+.btn-delete:hover {
+  color: #ef4444;
+  transform: scale(1.2);
+}
+
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(6px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* Cases à cocher personnalisées */
 li input[type="checkbox"] {
   appearance: none;
   -webkit-appearance: none;
@@ -237,6 +271,7 @@ li span {
   word-break: break-word;
 }
 
+/* Tâches complétées */
 li.done {
   background: rgba(255, 255, 255, 0.005);
   border-color: rgba(255, 255, 255, 0.01);
@@ -246,10 +281,6 @@ li.done span {
   text-decoration: line-through;
   color: var(--text-muted);
   opacity: 0.4;
-}
-
-.hidden {
-  display: none !important;
 }
 
 .hidden {
