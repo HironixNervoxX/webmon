@@ -18,3 +18,6 @@ scrape_configs:
   - job_name: 'postgres-exporter'
     static_configs:
       - targets: ['webmon-postgres-exporter:9187']
+  - job_name: 'backend'
+    static_configs:
+      - targets: ['webmon-backend:3001']
