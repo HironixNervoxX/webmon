@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const client = require('prom-client');
-const { initDb, getTasks, createTask, updateTask } = require('./db');
+const { initDb, getTasks, createTask, updateTask, deleteTask } = require('./db');
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -60,6 +60,16 @@ app.patch('/api/tasks/:id', async (req, res) => {
     res.json(task);
   } catch (e) {
     console.error('PATCH /tasks failed', e);
+    res.status(500).json({ error: 'internal' });
+  }
+});
+app.delete('/api/tasks/:id', async (req, res) => {
+  try {
+    const task = await deleteTask(req.params.id);
+    if (!task) return res.status(404).json({ error: 'not found' });
+    res.status(200).json(task);
+  } catch (e) {
+    console.error('DELETE /tasks failed', e);
     res.status(500).json({ error: 'internal' });
   }
 });
