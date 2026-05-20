@@ -17,7 +17,7 @@ if [[ "${1:-}" == "--dry-run" ]]; then
 fi
 
 # Vérifie que postgres tourne
-if ! docker compose ps postgres | grep -q "running"; then
+if ! docker compose exec -T postgres pg_isready -U webmon >/dev/null 2>&1; then
   echo -e "${RED}❌ Le conteneur postgres ne tourne pas. Lance 'make start' d'abord.${NC}"
   exit 1
 fi
