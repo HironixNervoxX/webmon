@@ -1,0 +1,50 @@
+{
+  "annotations": {"list": []},
+  "editable": true,
+  "panels": [
+    {
+      "title": "Logs - Tous les conteneurs WebMon",
+      "type": "logs",
+      "datasource": {"type": "loki", "uid": "loki"},
+      "gridPos": {"h": 11, "w": 24, "x": 0, "y": 0},
+      "options": {"showTime": true, "showLabels": true, "wrapLogMessage": true, "sortOrder": "Descending"},
+      "targets": [
+        {"datasource": {"type": "loki", "uid": "loki"}, "expr": "{container=~\"webmon-.+\"}", "refId": "A"}
+      ]
+    },
+    {
+      "title": "Logs - Backend",
+      "type": "logs",
+      "datasource": {"type": "loki", "uid": "loki"},
+      "gridPos": {"h": 9, "w": 12, "x": 0, "y": 11},
+      "options": {"showTime": true, "showLabels": false, "wrapLogMessage": true, "sortOrder": "Descending"},
+      "targets": [
+        {"datasource": {"type": "loki", "uid": "loki"}, "expr": "{container=\"webmon-backend\"}", "refId": "A"}
+      ]
+    },
+    {
+      "title": "Logs - Nginx",
+      "type": "logs",
+      "datasource": {"type": "loki", "uid": "loki"},
+      "gridPos": {"h": 9, "w": 12, "x": 12, "y": 11},
+      "options": {"showTime": true, "showLabels": false, "wrapLogMessage": true, "sortOrder": "Descending"},
+      "targets": [
+        {"datasource": {"type": "loki", "uid": "loki"}, "expr": "{container=\"webmon-nginx\"}", "refId": "A"}
+      ]
+    },
+    {
+      "title": "Volume de logs par conteneur",
+      "type": "timeseries",
+      "datasource": {"type": "loki", "uid": "loki"},
+      "gridPos": {"h": 8, "w": 24, "x": 0, "y": 20},
+      "targets": [
+        {"datasource": {"type": "loki", "uid": "loki"}, "expr": "sum by (container) (count_over_time({container=~\"webmon-.+\"}[1m]))", "refId": "A"}
+      ]
+    }
+  ],
+  "schemaVersion": 39,
+  "tags": ["webmon", "logs"],
+  "time": {"from": "now-1h", "to": "now"},
+  "title": "WebMon - Logs",
+  "uid": "webmon-logs"
+}
